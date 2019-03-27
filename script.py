@@ -19,6 +19,11 @@ with open(args.courses_txt) as f:
 		dept = line.split(" ")[0]
 		number = line.split(" ")[1]
 		r = requests.post("https://anex.us/grades/getData/", data={"dept": dept, "number": number})
+		try:
+			json.loads(r.text)
+		except Exception:
+			print(f'Course {dept}-{number} failed: invalid json')
+			continue
 		data = json.loads(r.text)
 
 		output_rows = []
