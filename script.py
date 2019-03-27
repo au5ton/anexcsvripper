@@ -8,6 +8,7 @@ import json
 # cli arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("courses_txt", help="The path to the courses.txt file. (Default: courses.txt)")
+parser.add_argument("--no-header-row", help="Doesn\'t include a header row in the CSV file.", action="store_true")
 args = parser.parse_args()
 
 courses = []
@@ -27,16 +28,17 @@ with open(args.courses_txt) as f:
 		data = json.loads(r.text)
 
 		output_rows = []
-		output_rows.append(list(data["classes"][0].keys()))
-		#print(output_rows[0])
-		for row in data["classes"]: # iterate over objs
+		if args.no_header_row == False:
+			output_rows.append(list(data["classes"][0].keys()))
+		# iterate over objs
+		for row in data["classes"]:
 			new_row = []
-			for key in list(data["classes"][0].keys()): # iterate over keys
+			# iterate over keys
+			for key in list(data["classes"][0].keys()):
 				new_row.append(row[key])
-			#print(new_row)
 			output_rows.append(new_row)
 
-		#print(output_rows)
+		# write to csv file
 		with open(f'grades-{dept}-{number}.csv', "w") as csvfile:
 			writer = csv.writer(csvfile)
 			writer.writerows(output_rows)
