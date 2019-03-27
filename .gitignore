@@ -1,0 +1,5 @@
+
+*.csv
+!example.csv
+*.txt
+!example.txt
